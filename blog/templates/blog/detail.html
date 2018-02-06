@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+	<head>
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{{ post.post_title }}</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'blog/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="{% static 'blog/animate.css' %}">
+
+<style type="text/css">
+	@media (min-width: 767px) { 
+			.myc11 {
+				width: 70%;
+			}
+			.myc1c1 {
+				width: 50%;
+			}
+	}
+
+	.myc22 {
+		width: 70%;
+	}
+	
+		/*
+		@media (min-width: 768px) { 
+			.bigright {
+				position: absolute;
+				right: 0;
+			}
+		}
+		*/
+		@media (min-width: 1200px) { 
+			.bigright {
+				position: absolute;
+				right: 0;
+			}
+		}
+	</style>
+
+	</head>
+
+	<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #4cd137;">
+  <a class="navbar-brand" href="localhost:8000/">IFTelugu</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'blog:shuffle' %}">SHUFFLE <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog:movies' %}">MOVIES</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog:conversations' %}">CONVERSATIONS</a>
+      </li>
+     
+    </ul>
+
+    <form class="form-inline" method="get" action="{% url 'blog:search_site' %}">
+    <input name="s1" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+
+    <ul class="navbar-nav bigright">
+    	<li class="nav-item">
+        <a class="nav-link" href="{% url 'blog:doodles' %}">DOODLES <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog:videos' %}">VIDEOS</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'blog:other_pages' %}">OTHERS</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+
+<div class="card myc11 animated fadeInUp" style="margin-top: 20px;">
+  <img class="card-img-top" src="{{ post.post_up_main_image.url }}" alt="Card image cap">
+  <div class="card-body">
+    <h1 class="card-title">{{ post.post_title }}</h1>
+  </div>
+</div>
+
+
+
+		<div style="margin-top: 40px; margin-bottom: 40px; padding-top: 40px; padding-bottom: 40px;" class="myc22">
+		
+		{% for p in post.paragraph_set.all %}
+			
+			<p>
+				{{ p.paragraph_text }}
+			</p>
+			
+			
+	{% if p.paragraph_up_image.url != null %}
+	<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="{{ p.paragraph_up_image.url }}" alt="pimage" />
+  </div>
+  {% endif %}
+  
+{% if p.paragraph_video_link != null %}
+	<iframe width="560" height="315" src="{{ p.paragraph_video_link }}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+{% endif %}
+			
+			
+		{% endfor %}
+		{% if post.sitelink_set.all %}
+		<h3>
+			Links And References
+		</h3>
+		{% endif %}
+		{% for p in post.sitelink_set.all %}
+			<a href="{{ p.link }}">{{ p.link }}</a>
+		{% endfor %}
+
+		<p>Published: {{ post.pub_date }}</p>
+
+		
+		<form id="like-form" action="add_like/" method="post">
+			{% csrf_token %}
+			<input id="likes" type="submit" name="l1" value="{{ post.votes }} Like!" class="btn btn-primary like_count" />
+		</form>
+
+		</div>
+<div class="myc1c1">
+		<h3>
+			Comments
+		</h3>
+
+		<form id="comment-form" action="add_comment/" method="post">
+			{% csrf_token %}
+  <div class="form-group" width="50%">
+    <label for="fid1">Comment Author</label>
+    <input name="i1" type="text" class="form-control" id="fid1" aria-describedby="emailHelp" placeholder="Enter name">
+    <small id="emailHelp" class="form-text text-muted">or Email Adress</small>
+  </div>
+  <div class="form-group" width="50%">
+    <label for="fid2">Post your thoughts</label>
+    <textarea name="i2" class="form-control" id="fid2"></textarea>
+  </div>
+  <button type="submit" name="SubmitButton" class="btn btn-light">Comment</button>
+</form>
+		
+	<div id="comms">
+
+		{% for p in post.comment_set.all %}
+			<h6>
+				{{ p.comment_author }}
+			</h6>
+			<p>
+				{{ p.comment_text }}
+			</p>
+		{% endfor %}
+	</div>
+</div>
+
+</div>
+
+
+		
+
+<script type="text/javascript" src="{% static 'blog/jquery-3.3.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'blog/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'blog/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'blog/my-ajax.js'%}"></script>
+
+	</body>
+
+</html>

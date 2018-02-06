@@ -1,0 +1,14 @@
+
+		
+		{% for post in latest_post_list %}
+			<div class="col-lg-4" style="margin-top: 20px;">
+				<div class="card" style="width: 18rem;">
+				  <a href="{% url 'blog:detail' post.id %}"><img class="card-img-top" src="{{ post.post_main_image }}" alt="Card image cap"></a>
+				  <div class="card-body">
+				    <p class="card-text">{{ post.post_title }}</p>
+				  </div>
+				</div>
+			</div>
+		{% endfor %}
+
+		
